@@ -68,11 +68,11 @@ task RenameChrXAndSubsetToSNPs {
 			sed  '/#/!{s/^23\t/X\t/; s/^/chr/}'  | \
 			bcftools view --no-update  -v snps -e 'REF=="-"||ALT=="-" || REF=="."||ALT=="."' -Oz -o temp.vcf.gz
 
-		bcftools index temp.vcf.gz
-		
+		bcftools index -t temp.vcf.gz
+
 		bcftools sort -T ./temp -Oz -o "~{outbase}".snps.vcf.gz temp.vcf.gz
 
-		bcftools index "~{outbase}".snps.vcf.gz 
+		bcftools index -t "~{outbase}".snps.vcf.gz 
 	>>>
 
 	output {
