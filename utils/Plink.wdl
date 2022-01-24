@@ -80,7 +80,7 @@ task RenameChrXAndSubsetToSNPs {
 	}
 
 	runtime {
-			docker: "biocontainers/bcftools:v1.9-1-deb_cv1"
+			docker: "bschiffthaler/bcftools:latest"
 			preemptible: 0
 			disks: "local-disk " + (4*ceil(size(vcf_in,"GiB"))+20) + " HDD"
 			bootDiskSizeGb: "16"
