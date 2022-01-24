@@ -29,7 +29,7 @@ task ConvertPlinkToVcf {
 
 		if [ "${lines}" -eq "1" ]; then
 			bim_bash=~{bim}
-			plink --bfile "${bim_base}" --recode vcf --out "~{outbase}"
+			plink --bfile "${bim_base}" --recode vcf-iid --out "~{outbase}"
 		else
 			echo "Error, found too many basenames in the input: $lines" 
 			exit 1
@@ -55,22 +55,21 @@ task RenameChrXAndSubsetToSNPs {
 
 	input {
 		File vcf_in
+		File ref_index
 	}
 	String outbase=basename(vcf_in, '.vcf')
 	
 	command <<<
-		set -euo pipefail 
+		set -exuo pipefail 
 
 		mkdir temp
 		# remove lines that start with '##contig=<ID=' and for the remaining lines that
 		# to not start with '#', replace 23 with X and add 'chr' to the begining of the line.
 		grep -v '^##contig=<ID=' "~{vcf_in}" | \
-			sed  '/#/!{s/^23\t/X\t/; s/^/chr/}'  | \
-			bcftools view --no-update  -v snps -e 'REF=="-"||ALT=="-" || REF=="."||ALT=="."' -Oz -o temp.vcf.gz
-
-		bcftools index -t temp.vcf.gz
-
-		bcftools sort -T ./temp -Oz -o "~{outbase}".snps.vcf.gz temp.vcf.gz
+			sed  '/#/!{s/^23\t/X\t/; s/^/chr/}'  | 
+			bcftools reheader -f ~{ref_index} |
+			bcftools view --no-update -v snps -e 'REF=="-"||ALT=="-" || REF=="."||ALT=="."' |
+			bcftools sort -Oz -o "~{outbase}".snps.vcf.gz 
 
 		bcftools index -t "~{outbase}".snps.vcf.gz 
 	>>>
@@ -134,14 +133,14 @@ workflow ConvertPlinkToVcfWF {
 			vcf_in = ConvertPlinkToVcf.vcf
 	}
 
-	call ReheaderVcf{
-		input:
-		vcf_in=RenameChrXAndSubsetToSNPs.vcf,
-		vcf_index_in=RenameChrXAndSubsetToSNPs.vcf_index
-	}
+#	call ReheaderVcf{
+#		input:
+#		vcf_in=RenameChrXAndSubsetToSNPs.vcf,
+#		vcf_index_in=RenameChrXAndSubsetToSNPs.vcf_index
+#	}
 
 	output {
-		File vcf=ReheaderVcf.vcf
-		File vcf_index=ReheaderVcf.vcf_index
+		File vcf=RenameChrXAndSubsetToSNPs.vcf
+		File vcf_index=RenameChrXAndSubsetToSNPs.vcf_index
 	}
 }
