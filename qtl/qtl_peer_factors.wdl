@@ -41,4 +41,10 @@ task qtl_peer_factors {
 
 workflow qtl_peer_factors_workflow {
     call qtl_peer_factors
+
+
+    output {
+        File combined_covariates=qtl_peer_factors.combined_covariates
+        File alpha=qtl_peer_factors.alpha
+    }
 }
