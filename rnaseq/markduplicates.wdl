@@ -19,7 +19,7 @@ task markduplicates {
     command <<<
         set -euo pipefail
         python3 -u /src/run_MarkDuplicates.py ~{input_bam} ~{prefix} \
-            --memory !{java_memory} \
+            --memory ~{java_memory} \
             ~{"--max_records_in_ram " + max_records_in_ram} \
             ~{"--sorting_collection_size_ratio " + sorting_collection_size_ratio}
         samtools index ~{output_bam}

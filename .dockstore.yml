@@ -39,7 +39,7 @@ workflows:
   - name: GetASECount
     subclass: WDL
     primaryDescriptorPath: /qtl/ase_gatk_readcounter.wdl
-  - name: MarkDupsAndCouintReads
+  - name: MarkDupsAndCountReads
     subclass: WDL
     primaryDescriptorPath: /rnaseq/aligned_rnaseq_bam_to_genecounts.wdl
 
