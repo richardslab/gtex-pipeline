@@ -30,6 +30,9 @@ workflows:
   - name: CreateParticipantSampleSets
     subclass: WDL
     primaryDescriptorPath: /utils/CreateParticipantSampleSets.wdl
+  - name: GetPEERFactors
+    subclass: WDL
+    primaryDescriptorPath: /qtl/qtl_peer_factors.wdl
   - name: GetString
     subclass: WDL
     primaryDescriptorPath: /utils/GetString.wdl
