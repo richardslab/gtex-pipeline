@@ -6,15 +6,15 @@ task CollapseGeneModel {
 		File gene_annotation_file
 		String output_prefix
 		File collapse_annotation_script
-		Boolean? stranded
-		Boolean? collapse_only
+		Boolean stranded=false
+		Boolean collapse_only=false
 	}
 	command<<<
 		set -euo pipefail
 
 		pip3 install bx-python
-		python3 ~{"--stranded " + stranded} \
-			~{"--collapse_only " + collapse_only} \
+		python3 ~{true="--stranded " false="" stranded} \
+			~{true="--collapse_only " false="" collapse_only} \
 			~{collapse_annotation_script} 
 			~{gene_annotation_file} 
 			~{output_prefix}.genes.gtf 
