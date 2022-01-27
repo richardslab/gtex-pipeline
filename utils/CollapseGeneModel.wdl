@@ -6,12 +6,18 @@ task CollapseGeneModel {
 		File gene_annotation_file
 		String output_prefix
 		File collapse_annotation_script
+		Boolean? stranded
+		Boolean? collapse_only
 	}
 	command<<<
 		set -euo pipefail
 
 		pip3 install bx-python
-		python3 ~{collapse_annotation_script} ~{gene_annotation_file} ~{output_prefix}.genes.gtf
+		python3 ~{"--stranded " + stranded} \
+			~{"--collapse_only " + collapse_only} \
+			~{collapse_annotation_script} 
+			~{gene_annotation_file} 
+			~{output_prefix}.genes.gtf 
 	>>>
 	runtime {
 		docker: "gcr.io/broad-cga-francois-gtex/leafcutter:latest"
@@ -51,7 +57,7 @@ task ExtractExonList {
 	EOF
 	>>>
 	output {
-		File exons = output_prefix+".exons.txt"
+		File exons = output_prefix + ".exons.txt"
 	}
 
 	runtime {

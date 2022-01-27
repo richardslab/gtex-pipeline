@@ -19,6 +19,7 @@ task rnaseqc2 {
         echo $(date +"[%b %d %H:%M:%S] Running RNA-SeQC 2")
         touch ${sample_id}.fragmentSizes.txt
         touch ${sample_id}.gc_content.tsv
+        
         rnaseqc ${genes_gtf} ${bam_file} . -s ${sample_id} ${"--bed " + intervals_bed} ${"--stranded " + strandedness} ${"--fasta " + reference_fasta} -vv ${flags}
         echo "  * compressing outputs"
         gzip *.gct
