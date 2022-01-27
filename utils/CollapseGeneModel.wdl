@@ -11,12 +11,12 @@ task CollapseGeneModel {
 	}
 	command<<<
 		set -euo pipefail
-
 		pip3 install bx-python
-		python3 ~{true="--stranded " false="" stranded} \
+
+		python3 ~{collapse_annotation_script} \
+			~{true="--stranded " false="" stranded} \
 			~{true="--collapse_only " false="" collapse_only} \
-			~{collapse_annotation_script} 
-			~{gene_annotation_file} 
+			~{gene_annotation_file} \
 			~{output_prefix}.genes.gtf 
 	>>>
 	runtime {
