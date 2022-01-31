@@ -8,7 +8,6 @@ task markduplicates {
         Float? sorting_collection_size_ratio
 
         Float memory
-        Int java_memory = floor(memory - 0.5)
         Int disk_space
         Int num_threads
         Int num_preempt
@@ -18,6 +17,9 @@ task markduplicates {
 
     command <<<
         set -euo pipefail
+        # taking memory from the variable so that memory increase can happen.
+        java_memory=$(( ${MEMORY_SIZE} - 0.5 ))
+        
         python3 -u /src/run_MarkDuplicates.py ~{input_bam} ~{prefix} \
             --memory ~{java_memory} \
             ~{"--max_records_in_ram " + max_records_in_ram} \
@@ -37,6 +39,7 @@ task markduplicates {
         disks: "local-disk ~{disk_space} HDD"
         cpu: "~{num_threads}"
         preemptible: "~{num_preempt}"
+        maxRetries: 3
     }
 
     meta {
