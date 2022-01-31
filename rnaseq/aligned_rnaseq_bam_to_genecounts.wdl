@@ -13,13 +13,15 @@ workflow rnaseq_pipeline_bam_workflow {
     call MD.markduplicates as markduplicates {
     input: 
         input_bam=bam_file, 
-        prefix=prefix
+        prefix=prefix,
+        disk_space=ceil(size(bam_file, "GB")*4 + 20)
     }
 
     call RNAQC.rnaseqc2 as rnaseqc2 {
     input: 
         bam_file=markduplicates.bam_file, 
-        sample_id=prefix
+        sample_id=prefix,
+        disk_space=ceil(size(bam_file, "GB") + 20)
     }
 
     output {
