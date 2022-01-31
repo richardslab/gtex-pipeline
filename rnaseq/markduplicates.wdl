@@ -18,10 +18,10 @@ task markduplicates {
     command <<<
         set -euo pipefail
         # taking memory from the variable so that memory increase can happen.
-        java_memory=$(echo "${MEMORY_SIZE} - 0.5" | bc )
+        java_memory=$(echo "${MEM_SIZE} - 0.5" | bc )
         
         python3 -u /src/run_MarkDuplicates.py ~{input_bam} ~{prefix} \
-            --memory "${java_memory}" \
+            --memory "${java_memory}" "${MEM_UNIT}"\
             ~{"--max_records_in_ram " + max_records_in_ram} \
             ~{"--sorting_collection_size_ratio " + sorting_collection_size_ratio}
         samtools index ~{output_bam}
