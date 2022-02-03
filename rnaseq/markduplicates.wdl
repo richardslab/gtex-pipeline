@@ -43,7 +43,7 @@ task markduplicates {
         disks: "local-disk ~{disk_space} HDD"
         cpu: "~{num_threads}"
         preemptible: "~{num_preempt}"
-        maxRetries: 3
+        maxRetries: 1
     }
 
     meta {
