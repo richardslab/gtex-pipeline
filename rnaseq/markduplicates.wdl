@@ -18,7 +18,11 @@ task markduplicates {
     command <<<
         set -euo pipefail
         # taking memory from the variable so that memory increase can happen.
-        java_memory=$(echo "${MEM_SIZE} - 0.5" | bc )
+        # awk is used as a workaround for 'bc' not being available 
+        # (thanks https://stackoverflow.com/a/48534957/360496)
+        a="0.5"
+        b="${MEM_SIZE}"
+        java_memory=$(awk -v a="$a" -v b="$b" 'BEGIN { printf "%s\n", a+b }' </dev/null )
         
         python3 -u /src/run_MarkDuplicates.py ~{input_bam} ~{prefix} \
             --memory "${java_memory}" "${MEM_UNIT}"\
