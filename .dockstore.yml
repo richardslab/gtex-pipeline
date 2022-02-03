@@ -42,6 +42,9 @@ workflows:
   - name: MarkDupsAndCountReads
     subclass: WDL
     primaryDescriptorPath: /rnaseq/aligned_rnaseq_bam_to_genecounts.wdl
+- name: CombineRNASeqc2Files
+    subclass: WDL
+    primaryDescriptorPath: /rnaseq/rnaseqc2_aggregate.wdl
 
 
 
