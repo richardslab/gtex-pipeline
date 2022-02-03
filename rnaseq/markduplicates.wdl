@@ -22,7 +22,7 @@ task markduplicates {
         # (thanks https://stackoverflow.com/a/48534957/360496)
         a="0.5"
         b="${MEM_SIZE}"
-        java_memory=$(awk -v a="$a" -v b="$b" 'BEGIN { printf "%s\n", a+b }' </dev/null )
+        java_memory=$(awk -v a="$a" -v b="$b" 'BEGIN { printf "%s\n", int(b-a) }' </dev/null )
         
         python3 -u /src/run_MarkDuplicates.py ~{input_bam} ~{prefix} \
             --memory "${java_memory}" "${MEM_UNIT}"\
