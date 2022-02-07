@@ -11,6 +11,7 @@ task markduplicates {
         Int disk_space
         Int num_threads
         Int num_preempt
+        Float java_memory_discount=0.5
     }
 
     String output_bam = sub(basename(input_bam), "\\.bam$", ".md.bam")
@@ -25,7 +26,7 @@ task markduplicates {
         # taking memory from the variable so that memory increase can happen.
         # awk is used as a workaround for 'bc' not being available 
         # (thanks https://stackoverflow.com/a/48534957/360496)
-        a="0.5"
+        a="~{java_memory_discount}"
         b="${MEM_SIZE}"
         java_memory=$(awk -v a="$a" -v b="$b" 'BEGIN { printf "%s\n", int(b-a) }' </dev/null )
         
