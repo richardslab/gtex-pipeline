@@ -2,10 +2,10 @@ version 1.0
 
 task rnaseqc2_aggregate {
     input {
-        Array[File] tpm_gcts
-        Array[File] count_gcts
-        Array[File] exon_count_gcts
-        Array[File] metrics_tsvs
+        Array[File]+ tpm_gcts
+        Array[File]+ count_gcts
+        Array[File]+ exon_count_gcts
+        Array[File]+ metrics_tsvs
         String prefix
         Array[File]? insertsize_hists
         String? flags
@@ -18,12 +18,26 @@ task rnaseqc2_aggregate {
     command <<<
         set -euo pipefail
         date +"[%b %d %H:%M:%S] Aggregating RNA-SeQC outputs"
+
+        if [ ~{length(tpm_gcts)} != ~{length(count_gcts)} ] || \
+           [ ~{length(tpm_gcts)} != ~{length(count_gcts)} ] || \
+           [ ~{length(tpm_gcts)} != ~{length(exon_count_gcts)} ] || \
+           [ ~{length(tpm_gcts)} != ~{length(metrics_tsvs)} ] ; then 
+            echo << EOF 
+            some of the lengths of the inputs are not equal:
+            
+            count_gcts: ~{length(count_gcts)}
+            count_gcts: ~{length(count_gcts)}
+            exon_count_gcts: ~{length(exon_count_gcts)}
+            metrics_tsvs: ~{length(metrics_tsvs)}
+        EOF
+
         mkdir individual_outputs
         mv ~{sep=' ' tpm_gcts} individual_outputs/
         mv ~{sep=' ' count_gcts} individual_outputs/
         mv ~{sep=' ' exon_count_gcts} individual_outputs/
         mv ~{sep=' ' metrics_tsvs} individual_outputs/
-        if [ -n '~{sep=',' insertsize_hists}' ]; then
+        if [ -n '~{sep=' ' insertsize_hists}' ]; then
             mv ~{sep=' ' insertsize_hists} individual_outputs/
         fi
         touch ~{prefix}.insert_size_hists.txt.gz
@@ -59,10 +73,10 @@ task rnaseqc2_aggregate {
 
 workflow rnaseqc2_aggregate_workflow {
     input {
-        Array[File] tpm_gcts
-        Array[File] count_gcts
-        Array[File] exon_count_gcts
-        Array[File] metrics_tsvs
+        Array[File]+ tpm_gcts
+        Array[File]+ count_gcts
+        Array[File]+ exon_count_gcts
+        Array[File]+ metrics_tsvs
         String prefix
         Array[File]? insertsize_hists
         String? flags

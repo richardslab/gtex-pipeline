@@ -17,6 +17,11 @@ task markduplicates {
 
     command <<<
         set -euo pipefail
+
+        curl -L -O https://github.com/broadinstitute/palantir-workflows/raw/main/Scripts/monitoring/cromwell_monitoring_script.sh 
+        chmod a+x cromwell_monitoring_script.sh 
+        ./cromwell_monitoring_script.sh &
+
         # taking memory from the variable so that memory increase can happen.
         # awk is used as a workaround for 'bc' not being available 
         # (thanks https://stackoverflow.com/a/48534957/360496)

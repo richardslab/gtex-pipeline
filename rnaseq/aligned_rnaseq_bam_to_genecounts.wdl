@@ -8,13 +8,14 @@ workflow rnaseq_pipeline_bam_workflow {
         File bam_file
         File bam_index
         String prefix
+        Int? override_disk
     }
 
     call MD.markduplicates as markduplicates {
     input: 
         input_bam=bam_file, 
         prefix=prefix,
-        disk_space=ceil(size(bam_file, "GB")*4 + 20)
+        disk_space=select_first([override_disk,ceil(size(bam_file, "GB")*4 + 20)])
     }
 
     call RNAQC.rnaseqc2 as rnaseqc2 {
