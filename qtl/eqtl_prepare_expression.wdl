@@ -1,5 +1,8 @@
 version 1.0
 
+import "../utils/CreateSampleParticipantMap.wdl" as CSPM
+
+
 task eqtl_prepare_expression {
     input {
         File tpm_gct
@@ -49,39 +52,22 @@ task eqtl_prepare_expression {
     }
 }
 
-task array_to_file {
-    input {
-        Array[String] array
-    }
-    output {
-        File file=write_lines(array)
-    }
-    command <<<
-    echo "hello world!"
-    >>>
 
-    runtime {
-        docker: "python:latest"
-        memory: "2GB"
-        disks: "local-disk 20 HDD"
-    }
-    meta {
-        author: "Yossi Farjoun"
-    }
-
-}
 workflow eqtl_prepare_expression_workflow {
     input {
-        Array[String] sample_participant_ids
+        Array[String] samples
+        Array[String] participants
     }
 
-    call array_to_file as participants {
+    call CSPM.CreateSampleParticipantMap as sp {
         input: 
-            array=sample_participant_ids
+           samples=samples,
+           participants=participants
+
     }
 
     call eqtl_prepare_expression{
         input:
-            sample_participant_ids_file=participants.file
+            sample_participant_ids_file=sp.map
     }
 }

@@ -1,5 +1,6 @@
 version 1.0 
 
+import "write_array.wdl" as wa
 
 workflow CreateSampleParticipantMap{
 	input {
@@ -8,7 +9,7 @@ workflow CreateSampleParticipantMap{
 	}
 
 	Array[Array[String]] sample_participant_array =  transpose([samples,participants])
-	call write_array_to_tsv {
+	call wa.write_array_to_tsv {
 		input:
 			array=sample_participant_array
 	}
@@ -19,23 +20,3 @@ workflow CreateSampleParticipantMap{
 }
 
 
-task write_array_to_tsv{
-	input {
-		Array[Array[String]] array
-	}
-
-	command <<<
-	>>>
-
-	output {
-		File tsv=write_tsv(array)
-	}
- 	runtime {
-        docker: "python:latest"
-        memory: "2GB"
-        disks: "local-disk 20 HDD"
-    }
-    meta {
-        author: "Yossi Farjoun"
-    }
-}
