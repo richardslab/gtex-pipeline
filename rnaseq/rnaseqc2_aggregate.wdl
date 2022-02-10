@@ -23,7 +23,7 @@ task rnaseqc2_aggregate {
            [ ~{length(tpm_gcts)} != ~{length(count_gcts)} ] || \
            [ ~{length(tpm_gcts)} != ~{length(exon_count_gcts)} ] || \
            [ ~{length(tpm_gcts)} != ~{length(metrics_tsvs)} ] ; then 
-            echo << EOF 
+            cat << EOF 
             some of the lengths of the inputs are not equal:
             
             count_gcts: ~{length(count_gcts)}
@@ -31,6 +31,8 @@ task rnaseqc2_aggregate {
             exon_count_gcts: ~{length(exon_count_gcts)}
             metrics_tsvs: ~{length(metrics_tsvs)}
         EOF
+        
+        fi
 
         mkdir individual_outputs
         mv ~{sep=' ' tpm_gcts} individual_outputs/
