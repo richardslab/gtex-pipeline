@@ -45,6 +45,9 @@ workflows:
   - name: CombineRNASeqc2Files
     subclass: WDL
     primaryDescriptorPath: /rnaseq/rnaseqc2_aggregate.wdl
+  - name: PrepareExpressionData
+    subclass: WDL
+    primaryDescriptorPath: /qtl/eqtl_prepare_expression.wdl
 
 
 
