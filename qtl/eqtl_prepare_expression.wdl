@@ -70,4 +70,10 @@ workflow eqtl_prepare_expression_workflow {
         input:
             sample_participant_ids_file=sp.map
     }
+
+    output {
+        File sample_particpant_map=sp.map
+        File expression_bed = eqtl_prepare_expression.expression_bed
+        File expression_bed_index = eqtl_prepare_expression.expression_bed_index
+    }
 }
