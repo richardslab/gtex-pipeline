@@ -1,14 +1,41 @@
 version 1.0 
 
 
-workflow CreateParticipantSampleSets{
+workflow CreateSampleParticipantMap{
 	input {
 		Array[String] samples
 		Array[String] participants
 	}
-	#[["membership:sample_set_id","sample"]]+
-	Array[Array[String]] membership_array =  flatten([[["membership:sample_set_id","sample"]] , transpose([participants,samples])])
+
+	Array[Array[String]] sample_participant_array =  transpose([participants,samples])
+	call write_array_to_tsv {
+		input:
+			array=sample_participant_array
+	}
+
 	output {
-		File memberships=write_tsv(membership_array)
+		File map=write_array_to_tsv.tsv
 	}	
+}
+
+
+task write_array_to_tsv{
+	input {
+		Array[Array[String]] array
+	}
+
+	command <<<
+	>>>
+
+	output {
+		File tsv=write_tsv(array)
+	}
+ 	runtime {
+        docker: "python:latest"
+        memory: "2GB"
+        disks: "local-disk 20 HDD"
+    }
+    meta {
+        author: "Yossi Farjoun"
+    }
 }

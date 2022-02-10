@@ -27,9 +27,9 @@ workflows:
   - name: ClusterJunctions
     subclass: WDL
     primaryDescriptorPath: /qtl/leafcutter/leafcutter_cluster.wdl
-  - name: CreateParticipantSampleSets
+  - name: CreateSampleParticipantMap
     subclass: WDL
-    primaryDescriptorPath: /utils/CreateParticipantSampleSets.wdl
+    primaryDescriptorPath: /utils/CreateSampleParticipantMap.wdl
   - name: GetPEERFactors
     subclass: WDL
     primaryDescriptorPath: /qtl/qtl_peer_factors.wdl
