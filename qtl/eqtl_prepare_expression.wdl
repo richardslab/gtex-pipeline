@@ -72,7 +72,7 @@ workflow eqtl_prepare_expression_workflow {
     }
 
     output {
-        File sample_particpant_map=sp.map
+        File sample_participant_map=sp.map
         File expression_bed = eqtl_prepare_expression.expression_bed
         File expression_bed_index = eqtl_prepare_expression.expression_bed_index
     }
