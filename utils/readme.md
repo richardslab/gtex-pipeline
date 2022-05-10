@@ -27,4 +27,4 @@
 - (jointly) QTLs found via fastqtl.wdl (FastQTL and Splice_FastQTL in Terra)
 - (jointly) annotate and filter QTLs vis fastqtl_annotate.wdl
 
-	
+	  
