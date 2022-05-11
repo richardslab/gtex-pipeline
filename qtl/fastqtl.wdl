@@ -130,6 +130,17 @@ task fastqtl_nominal {
                 if res is None:
                     print("one of the worker threads returned a None!")
                     assert False
+                try:
+                    resget=res.get()
+                except e:
+                    print("An exception got raised in one of the jobs:")
+                    print(res)
+                    print(e)
+                    raise(e)
+
+                if resget is None:
+                    print("one of the worker threads res.get() returned None!")
+                    print(res)
                 if len(res.get())==0:
                     print("one of the worker threads returned an empty array:")
                     print(res)
