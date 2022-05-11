@@ -196,9 +196,10 @@ task fastqtl_nominal {
     }
 
     output {
-        File allpairs="~{prefix}.allpairs.txt.gz"
-        File allpairs_log="~{prefix}.allpairs.log"
+        Array[File] logs = glob("~{prefix}_chunk*.log")
         File monitoring_log="monitoring.log"
+        File allpairs_log="~{prefix}.allpairs.log"
+        File? allpairs="~{prefix}.allpairs.txt.gz" #optional so that delocalization doesn't stop if missing
     }
 
     meta {
