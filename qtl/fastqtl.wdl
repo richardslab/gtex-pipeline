@@ -112,7 +112,7 @@ task fastqtl_nominal {
         parser.add_argument('-t', '--threads', default=8, type=int, help='Number of threads')
         parser.add_argument('-o', '--output_dir', default='.', help='Output directory')
         args = parser.parse_args()
-        fastqtl_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+        fastqtl_dir =  "/opt/fastqtl"
 
         if not os.path.exists(args.output_dir):
             os.makedirs(args.output_dir)
@@ -132,7 +132,7 @@ task fastqtl_nominal {
                     assert False
                 try:
                     resget=res.get()
-                except e:
+                except Exception as e:
                     print("An exception got raised in one of the jobs:")
                     print(res)
                     print(e)
@@ -196,7 +196,7 @@ task fastqtl_nominal {
     }
 
     output {
-        Array[File] logs = glob("~{prefix}_chunk*.log")
+        Array[File] logs = glob("*.log")
         File monitoring_log="monitoring.log"
         File allpairs_log="~{prefix}.allpairs.log"
         File? allpairs="~{prefix}.allpairs.txt.gz" #optional so that delocalization doesn't stop if missing
