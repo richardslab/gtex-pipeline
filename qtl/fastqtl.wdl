@@ -421,7 +421,7 @@ workflow fastqtl_workflow {
 
     output {
         File genes_permutation=fastqtl_permutations_merge.genes
-        File genes_nominal=fastqtl_nominal.allpairs
+        File? genes_nominal=fastqtl_nominal.allpairs
 
    }
 }
