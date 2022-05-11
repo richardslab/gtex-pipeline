@@ -48,6 +48,24 @@ workflows:
   - name: PrepareExpressionData
     subclass: WDL
     primaryDescriptorPath: /qtl/eqtl_prepare_expression.wdl
-
-
-
+  - name: CreateRNASeqQCSampleName
+    subclass: WDL
+    primaryDescriptorPath: /utils/CreateRNASeqQCSampleName.wdl
+  - name: PrepareCovariates
+    subclass: WDL
+    primaryDescriptorPath: /utils/PrepareCovariates.wdl
+  - name: FastQTL
+    subclass: WDL
+    primaryDescriptorPath: /qtl/fastqtl.wdl
+  - name: FastQTLAnnotate
+    subclass: WDL
+    primaryDescriptorPath: /qtl/fastqtl_annotate.wdl
+  - name: GetCromwellLabels
+    subclass: WDL
+    primaryDescriptorPath: /utils/GetCromwellLabels.wdl
+  - name: RenameVcfSamples
+    subclass: WDL
+    primaryDescriptorPath: /utils/RenameVcfSamples.wdl
+  - name: GetGeneId
+    subclass: WDL
+    primaryDescriptorPath: /utils/get_gene_id.wdl

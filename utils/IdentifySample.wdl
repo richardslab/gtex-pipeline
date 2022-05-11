@@ -20,7 +20,7 @@ task IdentifySample {
     String expected_sample_name_final = select_first([expected_sample_name, ""])
 
 
-    Int memoryDefault=16
+    Int memoryDefault=4
     Int memoryJava=select_first([memoryMaybe, memoryDefault])
     Int memoryRam=memoryJava+2
     Int disk_size = 10 + ceil(size([hapMap, vcf], "GB"))

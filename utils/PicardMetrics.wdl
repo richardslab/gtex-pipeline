@@ -4,7 +4,7 @@ task LoadPicardMetrics {
 	input {
 		File picard_metrics
 	}
-	Int disk_space = 10 + ceil(size(picard_metrics))
+	Int disk_space = 10 + ceil(size(picard_metrics,"GB"))
 
 	command <<<
 		python <<EOF 
