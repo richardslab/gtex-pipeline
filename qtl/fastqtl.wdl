@@ -124,7 +124,16 @@ task fastqtl_nominal {
                 pdata_res = [pool.map_async(perm_worker, ((args,k),)) for k in np.arange(1,int(args.chunks)+1)]
                 pool.close()
                 pool.join()
+            print(mpdata_res)
+
             for res in pdata_res:  # check exit status
+                if res is None:
+                    print("one of the worker threads returned a None!")
+                    assert False
+                if len(res.get())==0:
+                    print("one of the worker threads returned an empty array:")
+                    print(res)
+                    assert False  
                 if res.get()[0]!=0:
                     print("one of the worker threads returned a non-zero value:")
                     print(res)
