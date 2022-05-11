@@ -124,7 +124,7 @@ task fastqtl_nominal {
                 pdata_res = [pool.map_async(perm_worker, ((args,k),)) for k in np.arange(1,int(args.chunks)+1)]
                 pool.close()
                 pool.join()
-            print(mpdata_res)
+            print(pdata_res)
 
             for res in pdata_res:  # check exit status
                 if res is None:
