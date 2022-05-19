@@ -58,7 +58,7 @@ task qtl_peer_factors {
     }
 
     command <<<
-        set -euo pipefail
+        set -xeuo pipefail
         Rscript /src/run_PEER.R ~{expression_file} ~{prefix} ~{num_peer}
         /src/combine_covariates.py ~{prefix}.PEER_covariates.txt ~{prefix} ~{"--genotype_pcs " + genotype_pcs} ~{"--add_covariates " + add_covariates}
     >>>
