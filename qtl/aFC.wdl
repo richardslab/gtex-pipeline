@@ -77,6 +77,8 @@ task convert_qtls{
 
     with open(os.path.join(args.output_dir, args.prefix + '.extracted_qtls.txt'), 'wt') as f:
     ref_pairs_df.to_csv(f, sep='\t', na_rep='NA', float_format='%.6g', index=False)
+
+    EOF
     >>>
     runtime {
         docker: "gcr.io/broad-cga-francois-gtex/gtex_eqtl:V8"
