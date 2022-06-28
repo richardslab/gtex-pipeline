@@ -68,7 +68,11 @@ workflows:
     primaryDescriptorPath: /utils/RenameVcfSamples.wdl
   - name: FingerprintBam
     subclass: WDL
-    primaryDescriptorPath: /utils/FingerPrintBams.wdl
+    primaryDescriptorPath: /utils/FingerprintBams.wdl
   - name: GetGeneId
     subclass: WDL
     primaryDescriptorPath: /utils/get_gene_id.wdl
+  - name: AlleleFoldChange
+    subclass: WDL
+    primaryDescriptorPath: /qtl/aFC.wdl
+    

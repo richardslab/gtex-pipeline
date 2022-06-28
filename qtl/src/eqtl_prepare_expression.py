@@ -22,7 +22,7 @@ def prepare_bed(df, bed_template_df, chr_subset=None):
     return bed_df
 
 
-def prepare_expression(counts_df, tpm_df, vcf_lookup_s, sample_frac_threshold=0.2, count_threshold=6, tpm_threshold=0.1, mode='tmm_int'):
+def prepare_expression(counts_df, tpm_df, vcf_lookup_s, sample_frac_threshold=0.2, count_threshold=6, tpm_threshold=0.1, mode='tmm'):
     """
     Genes are thresholded based on the following expression rules:
       TPM >= tpm_threshold in >= sample_frac_threshold*samples
@@ -33,8 +33,6 @@ def prepare_expression(counts_df, tpm_df, vcf_lookup_s, sample_frac_threshold=0.
     Between-sample normalization modes:
       tmm: TMM from edgeR
       qn:  quantile normalization
-      tmm_int: TMM from edgeR + inverse-normal transform
-      qn_int:  quantile normalization + inverse-normal transform
     """
 
     ix = np.intersect1d(counts_df.columns, vcf_lookup_s.index)
@@ -49,15 +47,14 @@ def prepare_expression(counts_df, tpm_df, vcf_lookup_s, sample_frac_threshold=0.
     ).values
 
     # apply normalization
-    if mode.lower().startswith('tmm'):
-        norm_df = qtl.norm.edger_cpm(counts_df, normalized_lib_sizes=True)[mask]
-    elif mode.lower().startswith('qn'):
-        norm_df = qtl.norm.normalize_quantiles(tpm_df.loc[mask])
+    if mode.lower()=='tmm':
+        tmm_counts_df = qtl.norm.edger_cpm(counts_df, normalized_lib_sizes=True)
+        norm_df = qtl.norm.inverse_normal_transform(tmm_counts_df[mask])
+    elif mode.lower()=='qn':
+        qn_df = qtl.norm.normalize_quantiles(tpm_df.loc[mask])
+        norm_df = qtl.norm.inverse_normal_transform(qn_df)
     else:
         raise ValueError('Unsupported mode {}'.format(mode))
-
-    if mode.lower().endswith('_int'):
-        norm_df = qtl.norm.inverse_normal_transform(norm_df)
 
     return norm_df
 
