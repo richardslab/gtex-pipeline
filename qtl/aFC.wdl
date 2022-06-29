@@ -57,7 +57,9 @@ task convert_qtls{
     }
 
     command <<<
-    python3 <<- "EOF" ~{fastQTL_output} ~{prefix}
+    set -xeuo pipefail 
+
+    cat -<< "EOF" > extract_qtl_ids.py
     #!/usr/bin/env python3
     import pandas as pd
     import argparse
@@ -79,6 +81,8 @@ task convert_qtls{
     ref_pairs_df.to_csv(f, sep='\t', na_rep='NA', float_format='%.6g', index=False)
 
     EOF
+    python3 extract_qtl_ids.py --input_pairs "~{fastQTL_output}" --prefix "~{prefix}"
+ 
     >>>
     runtime {
         docker: "gcr.io/broad-cga-francois-gtex/gtex_eqtl:V8"
