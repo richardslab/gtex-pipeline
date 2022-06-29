@@ -78,7 +78,7 @@ task convert_qtls{
         columns=["sid", "pid", "sid_chr", "sid_pos"])[["sid", "pid", "sid_chr", "sid_pos"]]
 
     with open(os.path.join(args.output_dir, args.prefix + '.extracted_qtls.txt'), 'wt') as f:
-    ref_pairs_df.to_csv(f, sep='\t', na_rep='NA', float_format='%.6g', index=False)
+        ref_pairs_df.to_csv(f, sep='\t', na_rep='NA', float_format='%.6g', index=False)
 
     EOF
     python3 extract_qtl_ids.py --input_pairs "~{fastQTL_output}" --prefix "~{prefix}"
