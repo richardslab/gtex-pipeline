@@ -25,6 +25,7 @@ task aFC {
             --cov ~{covariates_file} \
             --log_xform 1 \
             --log_base 2 \
+            --output_se \
             --o ~{prefix}.aFC.txt
         gzip ~{prefix}.aFC.txt
     >>>
