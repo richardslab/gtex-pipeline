@@ -93,9 +93,9 @@ ENV PATH /opt/fastqtl/bin:$PATH
 
 # aFC
 RUN cd /opt && \
-    wget https://github.com/richardslab/aFC/archive/refs/tags/v0.3.2.tar.gz && \
-    tar -xf v0.3.2.tar.gz && mv aFC-0.3.2 aFC && \
-    rm v0.3.2.tar.gz
+    wget https://github.com/richardslab/aFC/archive/97e20d2c607ad22c113b386b1c6afe71386fbc92.tar.gz && \
+    tar -xf 97e20d2c607ad22c113b386b1c6afe71386fbc92.tar.gz && mv aFC-97e20d2c607ad22c113b386b1c6afe71386fbc92 aFC && \
+    rm 97e20d2c607ad22c113b386b1c6afe71386fbc92.tar.gz
 
 # copy scripts
 COPY src src/
