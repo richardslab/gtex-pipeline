@@ -9,7 +9,8 @@ task aFC {
         File covariates_file
         File afc_qtl_file
         String prefix
-    
+        String docker="gcr.io/broad-cga-francois-gtex/gtex_eqtl:V8"
+        
         Int memory
         Int disk_space
         Int num_threads
@@ -31,7 +32,7 @@ task aFC {
     >>>
 
     runtime {
-        docker: "gcr.io/broad-cga-francois-gtex/gtex_eqtl:V8"
+        docker: ~{docker}
         memory: "${memory}GB"
         disks: "local-disk ${disk_space} HDD"
         cpu: "${num_threads}"
