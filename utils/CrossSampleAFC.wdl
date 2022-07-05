@@ -23,32 +23,31 @@ workflow CrossSampleAFC {
 		Int disk_space
 		Int num_threads
 		Int num_preempt
-x
+
 	}
 
-	if ( length(expression_beds) !=2 ){
+	if ( length(expression_beds) != 2 ){
 		call E.Error as error1 {input: message="Current version only accepts input of length 2", error=1}
 	}
 
 
-	if ( length(expression_bed_indexs) !=length(expression_beds) ){
+	if ( length(expression_bed_indexs) != length(expression_beds) ){
 		call E.Error as error2 {input: message="length of bed index array was different from length of bed array", error=1}
 	}
 
-	if ( length(afc_qtl_files) !=length(expression_beds) ){
+	if ( length(afc_qtl_files) != length(expression_beds) ){
 		call E.Error as error3 {input: message="length of qtl array was different from length of bed array", error=1}
 	}
 
-	if ( length(prefixes) !=length(expression_beds) ){
+	if ( length(prefixes) != length(expression_beds) ){
 		call E.Error as error4 {input: message="length of prefixes array was different from length of bed array", error=1}
 	}
 
 	scatter (i in [1,2]){
 
-		
 		call aFC.convert_qtls as convert{
 			input: 
-				fastQTL_output= afc_qtl_files[i]
+				fastQTL_output=afc_qtl_files[i]
 			}
 
 		call aFC.aFC as acf_call {
