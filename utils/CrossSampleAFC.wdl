@@ -40,7 +40,7 @@ workflow CrossSampleAFC {
 	}
 
 	scatter (this in [0,1]) {
-		Int other=2-this
+		Int other=1-this
 
 		call aFC.convert_qtls as convert{
 			input: 
