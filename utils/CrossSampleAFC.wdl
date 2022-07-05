@@ -39,8 +39,8 @@ workflow CrossSampleAFC {
 		call E.Error as error4 {input: message="length of prefixes array was different from length of bed array", error=1}
 	}
 
-	scatter (this in [1,2]){
-		Int other=3-this
+	scatter (this in [0,1]) {
+		Int other=2-this
 
 		call aFC.convert_qtls as convert{
 			input: 
@@ -66,7 +66,7 @@ workflow CrossSampleAFC {
 	}
 
 	output {
-		File one_in_two_afc=afc_file[1]
-		File two_in_one_afc=afc_file[2]
+		File one_in_two_afc=afc_file[0]
+		File two_in_one_afc=afc_file[1]
 	}
 }
