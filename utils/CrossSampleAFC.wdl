@@ -43,19 +43,21 @@ workflow CrossSampleAFC {
 		call E.Error as error4 {input: message="length of prefixes array was different from length of bed array", error=1}
 	}
 
-	scatter (i in [1,2]){
+	scatter (this in [1,2]){
+		Int other=3-this
 
 		call aFC.convert_qtls as convert{
 			input: 
-				fastQTL_output=afc_qtl_files[i]
+				fastQTL_output=afc_qtl_files[this]
 			}
+
 
 		call aFC.aFC as acf_call {
 			input:
-				expression_bed=expression_beds[3-i],
-				expression_bed_index=expression_bed_indexs[3-i],
-				covariates_file=covariates_files[3-i],
-				prefix=prefixes[i]+ "_in_" + prefixes[3-i], 
+				expression_bed=expression_beds[other],
+				expression_bed_index=expression_bed_indexs[other],
+				covariates_file=covariates_files[other],
+				prefix=prefixes[this]+ "_in_" + prefixes[other], 
 				afc_qtl_file=convert.qtl_file		
 		}
 
