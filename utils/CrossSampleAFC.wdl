@@ -12,17 +12,13 @@ workflow CrossSampleAFC {
 		Array[File] covariates_files
 		
 		File vcf_file
-		File vcf_index
+		File vcf_file_index
 
 		Array[File] afc_qtl_files
 		Array[String] prefixes
 
 		String docker="gcr.io/broad-cga-francois-gtex/gtex_eqtl:V8"
 		
-		Int memory
-		Int disk_space
-		Int num_threads
-		Int num_preempt
 
 	}
 
@@ -48,6 +44,7 @@ workflow CrossSampleAFC {
 
 		call aFC.convert_qtls as convert{
 			input: 
+				prefix=prefixes[this],
 				fastQTL_output=afc_qtl_files[this]
 			}
 
@@ -58,7 +55,10 @@ workflow CrossSampleAFC {
 				expression_bed_index=expression_bed_indexs[other],
 				covariates_file=covariates_files[other],
 				prefix=prefixes[this]+ "_in_" + prefixes[other], 
-				afc_qtl_file=convert.qtl_file		
+				afc_qtl_file=convert.qtl_file,
+				docker=docker,
+				vcf_file=vcf_file,
+				vcf_index=vcf_file_index
 		}
 
 		File afc_file=acf_call.afc_file
