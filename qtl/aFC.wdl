@@ -15,6 +15,8 @@ task aFC {
         Int disk_space
         Int num_threads
         Int num_preempt
+
+        Boolean raw=false
     }
     
     command <<<
@@ -24,8 +26,7 @@ task aFC {
             --pheno ~{expression_bed} \
             --qtl ~{afc_qtl_file} \
             --cov ~{covariates_file} \
-            --log_xform 1 \
-            --log_base 2 \
+            ~{true="--log_xform 0" false="--log_xform 1 --log_base 2" raw} \
             --output_se \
             --o ~{prefix}.aFC.txt
         gzip ~{prefix}.aFC.txt
