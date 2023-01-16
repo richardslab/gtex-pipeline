@@ -26,5 +26,6 @@
 - (jointly) PEER factors are calculated via qtl_peer_factors.wdl (expressionQTL_PEERFactors and spliceQTL_PEERFactors in terra)
 - (jointly) QTLs found via fastqtl.wdl (FastQTL and Splice_FastQTL in Terra)
 - (jointly) annotate and filter QTLs vis fastqtl_annotate.wdl
+- (jointly) allele-fold change for the actual effect size.
 
 	  
