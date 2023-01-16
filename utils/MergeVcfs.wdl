@@ -50,9 +50,14 @@ workflow MergeVcfs{
 	}
 
 	if (length(names) !=length(vcfs_in)){
-		call e.Error("length of names and files must be the same!",1)
+		call e.Error{input:
+			message="length of names and files must be the same!",
+			error=1
+		}
 		
-	} else {
+	} 
+
+	if (length(names) ==length(vcfs_in)){
 
 		call MergeVcfsTask {
 			input:
