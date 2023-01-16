@@ -78,5 +78,7 @@ workflows:
   - name: CrossSetAlleleFoldChange
     subclass: WDL
     primaryDescriptorPath: /utils/CrossSampleAFC.wdl
+  - name: MergeVcfFiles
+    subclass: WDL
+    primaryDescriptorPath: /utils/MergeVcfs.wdl
     
-
