@@ -50,20 +50,22 @@ workflow MergeVcfs{
 	}
 
 	if (length(names) !=length(vcfs_in)){
-		call e.
-	}
+		call e.Error("length of names and files must be the same!",1)
+		
+	} else {
 
-	call MergeVcfsTask{
-		input:
-			vcfs=vcfs_in,
-			threads=threads,
-			basename=basename,
-			region=region
-	}
+		call MergeVcfsTask {
+			input:
+				vcfs=vcfs_in,
+				threads=threads,
+				basename=basename,
+				region=region
+		}
+	}	
 
 	output { 
-		File vcf_merged = MergeVcfsTask.vcf_out
-		File vcf_merged_index = MergeVcfsTask.vcf_out_index
+		File? vcf_merged = MergeVcfsTask.vcf_out
+		File? vcf_merged_index = MergeVcfsTask.vcf_out_index
 	}
 }
 
