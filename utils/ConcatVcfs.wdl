@@ -7,14 +7,14 @@ task ConcatVcfsTask {
 		Array[File] vcfs
 		String basename
 	}
-	File files=write_lines(vcfs)
+	
 	command <<<
 		wget https://raw.githubusercontent.com/broadinstitute/palantir-workflows/main/Scripts/monitoring/cromwell_monitoring_script.sh
 		bash ./cromwell_monitoring_script.sh | tee monitoring.log &
 
 		set -euo pipefail
 
-		bcftools concat -f ~{files} -n -Oz -o ~{basename}.vcf.gz 
+		bcftools concat -n -Oz -o ~{basename}.vcf.gz ~{sep=" " files}
 		bcftools index -t ~{basename}.vcf.gz 
 
 	>>>
