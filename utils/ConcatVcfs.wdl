@@ -5,7 +5,6 @@ version 1.0
 task ConcatVcfsTask {
 	input {
 		Array[File] vcfs
-		Int threads=1
 		String basename
 	}
 	File files=write_lines(vcfs)
@@ -15,7 +14,7 @@ task ConcatVcfsTask {
 
 		set -euo pipefail
 
-		bcftools concat  --threads ~{threads} -l ~{files} -Oz -o ~{basename}.vcf.gz 
+		bcftools concat-l ~{files} -Oz -o ~{basename}.vcf.gz 
 		bcftools index -t ~{basename}.vcf.gz 
 
 	>>>
@@ -39,14 +38,12 @@ task ConcatVcfsTask {
 workflow ConcatVcfs{
 	input {
 		Array[File] vcfs_in
-		Int threads=1
 		String basename
 	}
 
 	call ConcatVcfsTask {
 		input:
 			vcfs=vcfs_in,
-			threads=threads,
 			basename=basename,
 	}
 	
