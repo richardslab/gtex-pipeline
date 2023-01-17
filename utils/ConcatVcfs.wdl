@@ -14,7 +14,7 @@ task ConcatVcfsTask {
 
 		set -euo pipefail
 
-		bcftools concat -n -Oz -o ~{basename}.vcf.gz ~{sep=" " vcfs}
+		bcftools concat -Oz -o ~{basename}.vcf.gz ~{sep=" " vcfs}
 		bcftools index -t ~{basename}.vcf.gz 
 
 	>>>
