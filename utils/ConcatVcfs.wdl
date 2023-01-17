@@ -30,7 +30,7 @@ task ConcatVcfsTask {
 		disks: "local-disk " + (2*ceil(size(vcfs,"GiB"))+20) + " HDD"
 		bootDiskSizeGb: "16"
 		memory: 20 + " GB"
-		cpu: "~{threads}"
+		cpu: "1"
 	}
 }
 
