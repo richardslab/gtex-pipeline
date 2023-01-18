@@ -46,7 +46,7 @@ task UpdateSequencesFromFai {
 
 		set -euo pipefail
 		
-		bcftools reheader -f ~{fasta_fai} -Oz -o ~{vcf_out_name} vcf_in
+		bcftools reheader -f ~{fasta_fai} -o ~{vcf_out_name} vcf_in
 
 	>>>
 	output {
