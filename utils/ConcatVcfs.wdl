@@ -46,7 +46,9 @@ task UpdateSequencesFromFai {
 
 		set -euo pipefail
 		
-		bcftools reheader -f ~{fasta_fai} -o ~{vcf_out_name} ~{vcf_in}
+		bcftools view -h ~{vcf_in} | grep -v '^##contig=<ID' > header.txt
+
+		bcftools reheader -h header.txt -f ~{fasta_fai} -o ~{vcf_out_name} ~{vcf_in}
 
 	>>>
 	output {
