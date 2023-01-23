@@ -28,6 +28,9 @@ task fastqtl_nominal {
 
         touch ~{vcf_index}  # avoid tabix "index older than vcf" error
         touch ~{expression_bed_index}
+        touch ~{prefix}.allpairs.log 
+        touch monitoring.log
+        
         # nominal pass
 
         cat -<< "EOF" > run_FastQTL_threaded.py
