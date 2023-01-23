@@ -9,7 +9,6 @@ task MergeVcfsTask {
 		String basename
 		String? region
 	}
-	File files=write_lines(vcfs)
 	command <<<
 		wget https://raw.githubusercontent.com/broadinstitute/palantir-workflows/main/Scripts/monitoring/cromwell_monitoring_script.sh
 		bash ./cromwell_monitoring_script.sh | tee monitoring.log &
@@ -17,7 +16,7 @@ task MergeVcfsTask {
 		set -euo pipefail
 
 		#remove format field (except genotype), and remove any site that is filtered
-		bcftools merge  --threads ~{threads} -l ~{files} -0 -f -F+ ~{"-r " + region} |\
+		bcftools merge  --threads ~{threads} -l ~{write_lines(vcfs)} -0 -f -F+ ~{"-r " + region} |\
 			bcftools annotate  -x FORMAT -Oz -o ~{basename}.vcf.gz 
 
 		bcftools index -t ~{basename}.vcf.gz 

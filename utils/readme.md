@@ -19,7 +19,7 @@
 
 ### Per cohort/arm
 - (jointly*) covariates (Sex, PCs) are prepared via PrepareCovariates.wdl
-- (jointly*) extra covariates (age, extraction site, and sequencing run) are also prepared via PrepareCovariates.wdl, but with a different configuration.
+- (jointly*) extra covariates (age, extraction site, and sequencing run) are also prepared via PrepareCovariates, but with a different configuration. (PrepareExtraCovariates on Terra)
 -
 
 ### per QTL : cohort/arm
