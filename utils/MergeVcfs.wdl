@@ -5,6 +5,8 @@ import "Error.wdl" as e
 task MergeVcfsTask {
 	input {
 		Array[File] vcfs
+		Array[File] vcf_indexes
+
 		Int threads=1
 		String basename
 		String? region
@@ -43,6 +45,8 @@ workflow MergeVcfs{
 	input {
 		Array[String] names
 		Array[File] vcfs_in
+		Array[File] vcf_indexes_in
+
 		Int threads=1
 		String basename
 		String? region
@@ -61,6 +65,7 @@ workflow MergeVcfs{
 		call MergeVcfsTask {
 			input:
 				vcfs=vcfs_in,
+				vcf_indexes=vcf_indexes_in,
 				threads=threads,
 				basename=basename,
 				region=region
