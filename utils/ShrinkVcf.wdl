@@ -17,7 +17,7 @@ task ShrinkVcfTask {
 		set -euo pipefail
 
 		#remove format field (except genotype), and remove any site that is filtered
-		bcftools annotate -t ~{threads} -x FORMAT -Oz -o ~{basename}.vcf.gz ~{vcf} 
+		bcftools annotate --threads ~{threads} -x FORMAT -Oz -o ~{basename}.vcf.gz ~{vcf} 
 
 		bcftools index -t ~{basename}.vcf.gz 
 
