@@ -81,9 +81,9 @@ workflows:
   - name: MergeVcfFiles
     subclass: WDL
     primaryDescriptorPath: /utils/MergeVcfs.wdl
-  - name: ShrinkVcfFiles
+  - name: ShrinkVcf
     subclass: WDL
-    primaryDescriptorPath: /utils/ShrinkVcfs.wdl
+    primaryDescriptorPath: /utils/ShrinkVcf.wdl
   - name: ConcatVcfFiles
     subclass: WDL
     primaryDescriptorPath: /utils/ConcatVcfs.wdl
