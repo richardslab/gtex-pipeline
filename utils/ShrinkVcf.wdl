@@ -7,7 +7,7 @@ task ShrinkVcfTask {
 		File vcf
 		File vcf_index
 
-		Int threads=1
+		Int threads=0
 		String basename
 	}
 	command <<<
@@ -17,7 +17,7 @@ task ShrinkVcfTask {
 		set -euo pipefail
 
 		#remove format field (except genotype), and remove any site that is filtered
-		bcftools annotate  -x FORMAT -Oz -o ~{basename}.vcf.gz ~{vcf} 
+		bcftools annotate -t ~{threads} -x FORMAT -Oz -o ~{basename}.vcf.gz ~{vcf} 
 
 		bcftools index -t ~{basename}.vcf.gz 
 
@@ -34,7 +34,7 @@ task ShrinkVcfTask {
 		disks: "local-disk " + (2*ceil(size(vcf,"GiB"))+20) + " HDD"
 		bootDiskSizeGb: "16"
 		memory: 20 + " GB"
-		cpu: "~{threads}"
+		cpu: "~{threads+1}"
 	}
 }
 
