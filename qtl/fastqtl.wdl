@@ -200,8 +200,8 @@ task fastqtl_nominal {
 
     output {
         Array[File] logs = glob("*.log")
-        File monitoring_log="monitoring.log"
-        File allpairs_log="~{prefix}.allpairs.log"
+        File? monitoring_log="monitoring.log"  #optional so that delocalization doesn't stop if missing
+        File? allpairs_log="~{prefix}.allpairs.log"  #optional so that delocalization doesn't stop if missing
         File? allpairs="~{prefix}.allpairs.txt.gz" #optional so that delocalization doesn't stop if missing
     }
 
