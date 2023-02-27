@@ -2,6 +2,7 @@ version 1.0
 
 task fastqtl_nominal {
     input {
+        File check
         File expression_bed
         File expression_bed_index
         File vcf
@@ -211,8 +212,77 @@ task fastqtl_nominal {
 }
 
 
+task CheckInputs{
+    input {
+        File expression_bed
+        File vcf
+        File covariates
+    }
+
+  parameter_meta {
+    expression_bed: {
+      localization_optional: true
+    }
+    vcf: {
+      localization_optional: true
+    }
+    covariates: {
+      localization_optional: true
+    }
+  }
+
+  command <<<
+
+    set -ueo pipefail 
+
+
+    gsutil cat ~{covariates} | head -n 1 | cut 2- > covariates.samples
+
+    gsutil cat ~{expression_bed} | zcat | head -n 1 | cut 5- > expression.samples
+
+    gsutil cat ~{vcf} | zcat | grep -m 1 CHROM | cut 10- > vcf.samples
+
+
+    cat -<< "EOF" > check_inputs.R
+        
+    vcf_samples=names(read.csv("vcf.samples",sep="\t"))
+    
+    covariates_samples=names(read.csv("covariates.samples",sep="\t"))
+    
+    expression_samples=names(read.csv("expression.samples",sep='\t'))
+
+    diff=setdiff(combined_samples, expression_samples)
+    
+    if(length(diff)){
+      stop(paste("problem found. There are samples in combined_covariates that are not present in the expression data: ",paste(diff,collapse = " ")))
+    }
+
+    diff=setdiff(expression_samples, combined_samples)
+    if(length(diff)){
+      stop(paste("problem found. There are samples in the expression data that are not present in the combined_covariates: ",paste(diff,collapse = " ")))
+    }
+
+    diff=setdiff(expression_samples, vcf_samples)
+    if(length(diff)){
+      stop(paste("problem found. There are samples in the expression data that are not present in the vcf: ",paste(diff,collapse = ", ")))
+    }
+
+    EOF
+    
+    Rscript check_inputs.R
+
+    touch _success
+  >>>
+
+  output {
+    File success="_success"
+  }
+}
+
+
 task fastqtl_permutations_scatter {
     input {
+        File check
         File expression_bed
         File expression_bed_index
         File vcf
@@ -372,8 +442,17 @@ workflow fastqtl_workflow {
         File annotation_gtf
         File? variant_lookup
     }
+
+    call CheckInputs {
+        input: 
+            expression_bed=expression_bed,
+            covariates=covariates,
+            vcf=vcf    
+    }
+
     call fastqtl_nominal {
         input:
+            check=CheckInputs.success,
             chunks=chunks, 
             prefix=prefix,
             expression_bed=expression_bed, 
@@ -392,6 +471,7 @@ workflow fastqtl_workflow {
     scatter(i in range(chunks)) {
         call fastqtl_permutations_scatter {
             input:
+                check=CheckInputs.success,
                 current_chunk=i+1, 
                 chunks=chunks, 
                 prefix=prefix, 
