@@ -274,9 +274,19 @@ task CheckInputs{
     touch _success
   >>>
 
+
   output {
     File success="_success"
   }
+
+  runtime {
+        docker: "gcr.io/broad-cga-francois-gtex/gtex_eqtl:V8"
+        memory: "10GB"
+        disks: "local-disk 100 HDD"
+        cpu: "1"
+        preemptible: 1
+  }
+
 }
 
 
