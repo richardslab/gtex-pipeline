@@ -242,7 +242,7 @@ task CheckInputs {
     gsutil cat ~{expression_bed} | zcat | head -n 1 | cut -f 5- > expression.samples
     echo got expression.samples
     
-    gsutil cat ~{vcf} | zcat | (grep -m 1 CHROM  | cut -f 10- > vcf.samples 
+    gsutil cat ~{vcf} | zcat | grep -m 1 CHROM  | cut -f 10- > vcf.samples 
     echo got vcf.samples
 
 
@@ -271,6 +271,7 @@ task CheckInputs {
     }
 
     EOF
+    
     
     Rscript check_inputs.R 
 
