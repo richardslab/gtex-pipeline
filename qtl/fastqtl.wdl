@@ -212,7 +212,7 @@ task fastqtl_nominal {
 }
 
 
-task CheckInputs{
+task CheckInputs {
     input {
         File expression_bed
         File vcf
@@ -233,14 +233,14 @@ task CheckInputs{
 
   command <<<
 
-    set -ueo pipefail 
+    set -euo pipefail 
 
 
-    gsutil cat ~{covariates} | head -n 1 | cut 2- > covariates.samples
+    gsutil cat ~{covariates} | head -n 1 | cut -f 2- > covariates.samples
 
-    gsutil cat ~{expression_bed} | zcat | head -n 1 | cut 5- > expression.samples
+    gsutil cat ~{expression_bed} | zcat | head -n 1 | cut -f 5- > expression.samples
 
-    gsutil cat ~{vcf} | zcat | grep -m 1 CHROM | cut 10- > vcf.samples
+    gsutil cat ~{vcf} | zcat | grep -m 1 CHROM | cut -f 10- > vcf.samples
 
 
     cat -<< "EOF" > check_inputs.R
@@ -280,7 +280,7 @@ task CheckInputs{
   }
 
   runtime {
-        docker: "gcr.io/broad-cga-francois-gtex/gtex_eqtl:V8"
+        docker: "broadinstitute/gatk"
         memory: "10GB"
         disks: "local-disk 100 HDD"
         cpu: "1"
