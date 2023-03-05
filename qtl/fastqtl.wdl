@@ -235,21 +235,24 @@ task CheckInputs {
 
     set -euo pipefail 
 
-
-    gsutil cat ~{covariates} | head -n 1 | cut -f 2- > covariates.samples
+    echo startup
+    gsutil cat ~{covariates} | head -n 1 | cut -f 2- > covariates.samples 
+    echo got covariate.samples
 
     gsutil cat ~{expression_bed} | zcat | head -n 1 | cut -f 5- > expression.samples
-
-    gsutil cat ~{vcf} | zcat | grep -m 1 CHROM | cut -f 10- > vcf.samples
+    echo got expression.samples
+    
+    gsutil cat ~{vcf} | zcat | (grep -m 1 CHROM  | cut -f 10- > vcf.samples 
+    echo got vcf.samples
 
 
     cat -<< "EOF" > check_inputs.R
         
-    vcf_samples=names(read.csv("vcf.samples",sep="\t"))
+    vcf_samples=names(read.csv("vcf.samples", sep="\t"))
+     
+    covariates_samples=names(read.csv("covariates.samples", sep="\t"))
     
-    covariates_samples=names(read.csv("covariates.samples",sep="\t"))
-    
-    expression_samples=names(read.csv("expression.samples",sep='\t'))
+    expression_samples=names(read.csv("expression.samples", sep='\t'))
 
     diff=setdiff(combined_samples, expression_samples)
     
@@ -269,7 +272,7 @@ task CheckInputs {
 
     EOF
     
-    Rscript check_inputs.R
+    Rscript check_inputs.R 
 
     touch _success
   >>>
@@ -277,6 +280,9 @@ task CheckInputs {
 
   output {
     File success="_success"
+    File? covariate_samples="covariates.samples"
+    File? expression_samples="expression.samples"
+    File? vcf_samples="vcf.samples"
   }
 
   runtime {
