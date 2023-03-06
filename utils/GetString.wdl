@@ -1,11 +1,22 @@
-version 1.0 
+version 1.0
 
-
-workflow GetString {
+task echo_task {
 	input {
-		String string
+		String message
 	}
+	command <<<
+		echo ${message}
+	>>>
+
+	runtime { 
+		docker: "broadgdac/firecloud-ubuntu:15.10"
+	}
+
 	output {
-		String out=string
-	}	
+		String echoed=read_string(stdout())
+	}
+}
+
+workflow echo {
+	call echo_task
 }

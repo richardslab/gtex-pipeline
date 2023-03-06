@@ -33,6 +33,7 @@ def prepare_expression(counts_df, tpm_df, vcf_lookup_s, sample_frac_threshold=0.
     Between-sample normalization modes:
       tmm: TMM from edgeR
       qn:  quantile normalization
+      voom: limma-zoom normalization (using edgeR normalization factor and log2(1+x))
     """
 
     ix = np.intersect1d(counts_df.columns, vcf_lookup_s.index)
@@ -53,6 +54,8 @@ def prepare_expression(counts_df, tpm_df, vcf_lookup_s, sample_frac_threshold=0.
     elif mode.lower()=='qn':
         qn_df = qtl.norm.normalize_quantiles(tpm_df.loc[mask])
         norm_df = qtl.norm.inverse_normal_transform(qn_df)
+    elif mode.lower()=='voom':
+        norm_df=qtl.norm.voom_transform(tpm_df.loc[mask])
     else:
         raise ValueError('Unsupported mode {}'.format(mode))
 

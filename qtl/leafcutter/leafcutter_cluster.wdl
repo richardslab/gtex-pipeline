@@ -1,5 +1,36 @@
 version 1.0
 
+import "../../utils/CreateSampleParticipantMap.wdl" as util
+import "../../utils/SubsetBed.wdl" as subset
+
+task get_sample_names_from_junc_files {
+	input {
+		Array[String] junc_file_names
+	}
+	File junc_files_list = write_lines(junc_file_names)
+	command <<<
+	cat <<- "EOF" > temp.sh
+		file="$1"
+		echo $(basename "$file") | sed 's/.regtools_junc.txt.gz//; s/\./_/g;'
+		EOF
+		# the list of files -> make links to remove periods, and provide new list of files
+		xargs -n1 -I {} bash ./temp.sh "{}" < ~{junc_files_list} > file_list.txt
+	>>>
+
+	output {
+		Array[String] sample_names=read_lines("file_list.txt")
+	}
+ 	runtime {
+        docker: "python:latest"
+        memory: "2GB"
+        disks: "local-disk 20 HDD"
+    }
+    meta {
+        author: "Yossi Farjoun"
+    }
+}
+
+
 task leafcutter_cluster {
 	input {
 		Array[File] junc_files
@@ -12,10 +43,13 @@ task leafcutter_cluster {
 		Int? max_intron_len
 		Int? num_pcs
 
+
 		Int memory
 		Int disk_space
 		Int num_threads
 		Int num_preempt
+
+		File sample_identifier_map
 
 		File? cluster_prepare_fastqtl_override
 	}
@@ -32,11 +66,6 @@ task leafcutter_cluster {
 		EOF
 		# the list of files -> make links to remove periods, and provide new list of files
 		xargs -n1 -I {} bash ./temp.sh "{}" < ~{write_lines(junc_files)} > file_list.txt
-		
-		# replicate the part prior to the regtools ending
-		# with a \t separating, and put the results into temp_map.tsv
-		printf "sample\tindividual\n" > temp_map.tsv
-		sed 's/\(.*\).regtools_junc.txt.gz/\1\t\1/' file_list.txt >> temp_map.tsv
 		
 		touch "~{prefix}_perind.counts.gz"
 		touch "~{prefix}_perind_numbers.counts.gz"
@@ -57,7 +86,7 @@ task leafcutter_cluster {
 			"~{exon_list}" \
 			"${genes_gtf_uncompressed}" \
 			"~{prefix}" \
-			"temp_map.tsv" \
+			"~{sample_identifier_map}" \
 			~{"--min_clu_reads " + min_clu_reads} \
 			~{"--min_clu_ratio " + min_clu_ratio} \
 			~{"--max_intron_len " + max_intron_len} \
@@ -93,12 +122,35 @@ task leafcutter_cluster {
 workflow leafcutter_cluster_workflow {
 	input {
 		Array[File] junc_files
+		Array[String] identifiers # The identifier in the VCF for each of the samples, in the same order that the junction files are given. 
+		File vcf_chr_list # file containing the names of the contigs to include. Output bedfile will be subset to this.
 	}
+
+	call get_sample_names_from_junc_files{
+	input:
+		junc_file_names=junc_files
+	}
+
+
+	call util.CreateSampleParticipantMap as get_map{
+	input:
+		samples=get_sample_names_from_junc_files.sample_names,
+		participants=identifiers,
+		header=["sample","individual"]
+	}
+	
 
 	call leafcutter_cluster{
 	input:
+		sample_identifier_map = get_map.map,
 		disk_space=20+ceil(size(junc_files, "GB")),
 		junc_files=junc_files
+	}
+
+	call subset.SubsetBed as subsetBed{
+		input:
+			bed=leafcutter_cluster.leafcutter_bed,
+			contig_list=vcf_chr_list
 	}
 
 	output {
@@ -111,6 +163,8 @@ workflow leafcutter_cluster_workflow {
 		File leafcutter_phenotype_groups=leafcutter_cluster.phenotype_groups
 		File leafcutter_bed=leafcutter_cluster.leafcutter_bed
 		File leafcutter_bed_index=leafcutter_cluster.leafcutter_bed_index
+		File leafcutter_subset_bed=subsetBed.out
+		File leafcutter_subset_bed_index=subsetBed.out_index
 		File leafcutter_pcs=leafcutter_cluster.leafcutter_pcs
 	}
 }

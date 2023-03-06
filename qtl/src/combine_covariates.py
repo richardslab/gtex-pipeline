@@ -15,14 +15,21 @@ args = parser.parse_args()
 
 print('Combining covariates ... ', end='', flush=True)
 expression_df = pd.read_csv(args.expression_covariates, sep='\t', index_col=0, dtype=str)
+print(f"there are {len(expression_df)} expression covariates.")
 if args.genotype_pcs is not None:
+    print(f"Reading genotype PCs {args.genotype_pcs}")
     genotype_df = pd.read_csv(args.genotype_pcs, sep='\t', index_col=0, dtype=str)
+    print(f"There are {len(genotype_df)} genotype PCs.")
     combined_df = pd.concat([genotype_df[expression_df.columns], expression_df], axis=0)
+    print(f"There are {len(combined_df)} combined covariates.")
 else:
     combined_df = expression_df
 for c in args.add_covariates:
+    print(f"Reading additional covariates {args.genotype_pcs}.")
     additional_df = pd.read_csv(c, sep='\t', index_col=0, dtype=str)
+    print(f"There are {len(additional_df)} additional covariates in this file.")
     combined_df = pd.concat([combined_df, additional_df[expression_df.columns]], axis=0)
+    print(f"There are now {len(combined_df)} combined covariates.")
 
 # identify and drop colinear covariates
 C = combined_df.astype(np.float64).T

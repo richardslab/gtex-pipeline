@@ -39,9 +39,26 @@ task star {
         Int disk_space
         Int num_threads
         Int num_preempt
+        String? timeout # non preemtible timeout
     }
+    String timeout_def = select_first([timeout,"7h"])
+    String preemptible_timeout = "7d" #this is the maximum time for a run anyway
     command <<<
         set -euo pipefail
+
+        preemptible=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/scheduling/preemptible" -H "Metadata-Flavor: Google")
+
+        echo "preemptible: $preemptible"
+        if [ "$preemptible" = "TRUE" ]; then
+            timeout=~{preemptible_timeout}
+        else
+            timeout=~{timeout_def}
+        fi
+
+
+        curl -L -O https://github.com/broadinstitute/palantir-workflows/raw/main/Scripts/monitoring/cromwell_monitoring_script.sh 
+        chmod a+x cromwell_monitoring_script.sh 
+        ./cromwell_monitoring_script.sh &
 
         if [[ ~{fastq1} == *".tar" || ~{fastq1} == *".tar.gz" ]]; then
             tar -xvvf ~{fastq1}
@@ -78,6 +95,7 @@ task star {
         touch "star_out/~{prefix}.Chimeric.out.sorted.bam.bai"
         touch "star_out/~{prefix}.ReadsPerGene.out.tab"  # run_STAR.py will gzip
 
+        timeout "${timeout}" \
         /src/run_STAR.py \
             star_index "$fastq1_abs" "$fastq2_abs" "~{prefix}" \
             --output_dir star_out \

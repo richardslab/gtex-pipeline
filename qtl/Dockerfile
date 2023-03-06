@@ -79,7 +79,7 @@ RUN mkdir /opt/metasoft && cd /opt/metasoft && \
 
 # Python
 RUN pip3 install --upgrade pip setuptools
-RUN pip3 install numpy tables pandas scipy matplotlib h5py feather-format pysam statsmodels scikits.bootstrap
+RUN pip3 install numpy tables pandas scipy matplotlib h5py feather-format pysam statsmodels scikits.bootstrap qtl pyarrow
 # numpy dependencies:
 RUN pip3 install pyBigWig
 
@@ -93,9 +93,9 @@ ENV PATH /opt/fastqtl/bin:$PATH
 
 # aFC
 RUN cd /opt && \
-    wget https://github.com/francois-a/aFC/archive/2189fbf403b3d1ced54da21421d00b2d4bf44310.tar.gz && \
-    tar -xf 2189fbf403b3d1ced54da21421d00b2d4bf44310.tar.gz && mv aFC-2189fbf403b3d1ced54da21421d00b2d4bf44310 aFC && \
-    rm 2189fbf403b3d1ced54da21421d00b2d4bf44310.tar.gz
+    wget https://github.com/richardslab/aFC/archive/97e20d2c607ad22c113b386b1c6afe71386fbc92.tar.gz && \
+    tar -xf 97e20d2c607ad22c113b386b1c6afe71386fbc92.tar.gz && mv aFC-97e20d2c607ad22c113b386b1c6afe71386fbc92 aFC && \
+    rm 97e20d2c607ad22c113b386b1c6afe71386fbc92.tar.gz
 
 # copy scripts
 COPY src src/

@@ -9,6 +9,7 @@ workflow sQTLAnalysis{
 	input {
 		File hapMap
 		Boolean crosscheck=true
+		Int WGS_genotypes_for_alignment=1 #override if using something else
 	}	
 
 	call participant_vcfs.participant_vcfs as get_het_vcfs{} 
@@ -27,7 +28,7 @@ workflow sQTLAnalysis{
 			hapMap = hapMap	
 		}
 
-		call id.IdentifySampleWF as identifySample{
+		call id.IdentifySampleWF as identifySample {
 			input:
 			sample=star.bam_file,
 	        sample_index=star.bam_index,
@@ -57,6 +58,7 @@ workflow sQTLAnalysis{
 		File? clustered_metrics=identifySample.fp_clustered
 		File? fingerprint_matrix=identifySample.fp_metrics
 		String? fingerprint_match=identifySample.match_group
+		Int WGS_for_alignment=WGS_genotypes_for_alignment
 
 	}
 }
