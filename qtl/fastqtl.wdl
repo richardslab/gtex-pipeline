@@ -233,7 +233,7 @@ task CheckInputs {
 
   command <<<
 
-    set -euo pipefail 
+    set -eu
 
     echo startup
     gsutil cat ~{covariates} | head -n 1 | cut -f 2- > covariates.samples 
