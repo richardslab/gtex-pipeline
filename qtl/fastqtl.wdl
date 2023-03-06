@@ -254,15 +254,15 @@ task CheckInputs {
     
     expression_samples=names(read.csv("expression.samples", sep='\t'))
 
-    diff=setdiff(combined_samples, expression_samples)
+    diff=setdiff(covariates_samples, expression_samples)
     
     if(length(diff)){
-      stop(paste("problem found. There are samples in combined_covariates that are not present in the expression data: ",paste(diff,collapse = " ")))
+      stop(paste("problem found. There are samples in covariates_samples that are not present in the expression data: ",paste(diff,collapse = " ")))
     }
 
-    diff=setdiff(expression_samples, combined_samples)
+    diff=setdiff(expression_samples, covariates_samples)
     if(length(diff)){
-      stop(paste("problem found. There are samples in the expression data that are not present in the combined_covariates: ",paste(diff,collapse = " ")))
+      stop(paste("problem found. There are samples in the expression data that are not present in the covariates_samples: ",paste(diff,collapse = " ")))
     }
 
     diff=setdiff(expression_samples, vcf_samples)
